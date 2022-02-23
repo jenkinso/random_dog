@@ -1,16 +1,11 @@
 # random_dog
 
-A Flutter project to demonstate use of Http, IO and Json libraries
+A Flutter project to demonstrate use of Http, IO and Json libraries
 
-## Getting Started
+## Handling null image on app start-up
 
-This project is a starting point for a Flutter application.
+![Screenshot1](/screenshots/Screenshot_1645660409.png)
 
-A few resources to get you started if this is your first Flutter project:
+## Image displayed after pressing Refresh FAB button
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot2](/screenshots/Screenshot_1645660425.png)
