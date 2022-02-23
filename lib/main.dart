@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
-//TODO: Import the necessary libraries from dart::
+import 'dart:convert';
+import 'dart:io';
 
 void main() {
   runApp(MyApp());
@@ -28,14 +28,49 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? randomDogImage;
-  
+  final String randomDogHost = 'dog.ceo';
+  final String randomDogPath = '/api/breeds/image/random';
 
-  void _fetchPostsFromWeb() {
-    //TODO: call the HTTP url provided for retrieving a single do image
-    //Parse the JSON response 
-    //Set the value of the dog image url to randomDogImage variable
-    //remember that this variable is nullable
-    
+  /// Fetch URL for dog image from Dog API
+  void _fetchPostsFromWeb() async {
+    var client = HttpClient();
+
+    try {
+      var url = Uri.https(randomDogHost, randomDogPath);
+      HttpClientRequest request = await client.getUrl(url);
+      HttpClientResponse response = await request.close();
+
+      // Process the response
+      final stringData = await response.transform(utf8.decoder).join();
+      var data = jsonDecode(stringData);
+
+      // Extract the URL of the dog image provided by Dog API. Update UI.
+      setState(() {
+        randomDogImage = data['message'];
+      });
+    } finally {
+      client.close();
+    }
+  }
+
+  /// Return Image widget if available, otherwise error Text
+  Widget _displayDog() {
+    if (randomDogImage == null) {
+      //return const Text('Please refresh to load a new dog image!', style: TextStyle(fontSize: 22));
+      return AlertDialog(
+        title: const Text('No image available'),
+        content: const Text('Press Refresh to load a new dog!'),
+        actions: <Widget>[
+          TextButton(
+              child: const Text('OK'),
+              onPressed: () => Navigator.pop(context),
+          )
+        ]
+      );
+    }
+    else {
+      return Image.network(randomDogImage as String);
+    }
   }
 
   @override
@@ -48,21 +83,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Expanded(
-             //TODO: if the randomDogImage variable is null
-             //Show a text indicating that the image is not retrieved
-             //Else, display the Image using the Network Image
-             
+             child: _displayDog(),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          //TODO: remember we are trying to call a method on a button 
-          //press event and in order for the updated variable value
-          //to be displayed on the UI, you need to do something...otherwise
-          //irrespective of how many times you press this button, even if the
-          //randomDogImage value is set, it won't show in the UI, unless
-          //you do a hot restart. 
         onPressed: _fetchPostsFromWeb,
         child: Icon(Icons.refresh),
       ),
