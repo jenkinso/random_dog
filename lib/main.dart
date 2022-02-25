@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:random_dog/multiple_dogs.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -11,22 +13,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Random Dog Image',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const RandomDog(),
+        '/MultipleDogs': (context) => const MultipleDogs(),
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class RandomDog extends StatefulWidget {
+  const RandomDog({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _RandomDogState createState() => _RandomDogState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _RandomDogState extends State<RandomDog> {
   String? randomDogImage;
   final String randomDogHost = 'dog.ceo';
   final String randomDogPath = '/api/breeds/image/random';
@@ -85,6 +91,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
              child: _displayDog(),
             ),
+            Container(
+              margin: EdgeInsetsDirectional.only(bottom: 20),
+              child: ElevatedButton(
+                  onPressed: () { Navigator.pushNamed(context, '/MultipleDogs'); },
+                  child: Text('View multiple dogs', style: TextStyle(fontSize: 18))
+              ),
+            )
           ],
         ),
       ),
