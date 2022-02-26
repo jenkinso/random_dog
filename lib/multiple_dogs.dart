@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:random_dog/helper_methods.dart';
 
 class MultipleDogs extends StatefulWidget {
   const MultipleDogs({Key? key}) : super(key: key);
@@ -61,6 +62,7 @@ class _DogsFormState extends State<DogsForm> {
                 onPressed: () {
                   // Validate returns true if the form is valid, or false otherwise.
                   if (_formKey.currentState!.validate()) {
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Processing Data')),
                     );

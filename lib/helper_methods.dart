@@ -1,18 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-void main() async {
-  var m = await http();
-
-  for (var url in m) {
-    print(url);
-  }
-}
-
-Future<List<String>> http({int numDogs = 10}) async {
+/// Fetch List of URL(s) for dog image(s) from Dog API
+Future<List<String>> fetchURLListFromDogApi({int numDogs = 1}) async {
   var client = HttpClient();
   final url = Uri.https('dog.ceo', '/api/breeds/image/random/$numDogs');
-  List<String> imageList = [];
+  List<String> urlList = [];
 
   try {
     HttpClientRequest request = await client.getUrl(url);
@@ -20,13 +13,11 @@ Future<List<String>> http({int numDogs = 10}) async {
 
     // Process the response
     final stringData = await response.transform(utf8.decoder).join();
-    print(stringData);
 
     var msg = jsonDecode(stringData);
-    msg['message'].forEach(
-  (value) => imageList.add(value)
-  );
-    return imageList;
+    msg['message'].forEach((value) => urlList.add(value));
+
+    return urlList;
   } finally {
     client.close();
   }

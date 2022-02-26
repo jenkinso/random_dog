@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:random_dog/multiple_dogs.dart';
+import 'multiple_dogs.dart';
+import 'helper_methods.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,28 +33,16 @@ class RandomDog extends StatefulWidget {
 
 class _RandomDogState extends State<RandomDog> {
   String? randomDogImage;
-  final String randomDogHost = 'dog.ceo';
-  final String randomDogPath = '/api/breeds/image/random';
 
   /// Fetch URL for dog image from Dog API
   void _fetchPostsFromWeb() async {
-    var client = HttpClient();
 
-    try {
-      var url = Uri.https(randomDogHost, randomDogPath);
-      HttpClientRequest request = await client.getUrl(url);
-      HttpClientResponse response = await request.close();
+    var urlList = await fetchURLListFromDogApi();
 
-      // Process the response
-      final stringData = await response.transform(utf8.decoder).join();
-      var data = jsonDecode(stringData);
-
-      // Extract the URL of the dog image provided by Dog API. Update UI.
+    if (urlList.isNotEmpty) {
       setState(() {
-        randomDogImage = data['message'];
+        randomDogImage = urlList[0];
       });
-    } finally {
-      client.close();
     }
   }
 
