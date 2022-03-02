@@ -9,11 +9,12 @@ class MultipleDogs extends StatefulWidget {
 }
 
 class _MultipleDogsState extends State<MultipleDogs> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Multiple Random Dogs'),
+        title: const Text('Multiple Random Dogs'),
       ),
       body: Center(
         child: Column(
@@ -36,6 +37,7 @@ class DogsForm extends StatefulWidget {
 class _DogsFormState extends State<DogsForm> {
 
   final _formKey = GlobalKey<FormState>();
+  int numDogs = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -45,23 +47,33 @@ class _DogsFormState extends State<DogsForm> {
           children: <Widget>[
             TextFormField(
               decoration: InputDecoration(
-                hintText: '20',
                 labelText: 'How many images would you like to view? (1-50)',
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter the number of images you wish to view (1-50).';
                 }
-                //TODO: check for 1-50
+
+                int? valueAsInt = int.tryParse(value);
+                if (valueAsInt != null) {
+                  if (valueAsInt < 1 || valueAsInt > 50) {
+                    return 'Please enter a number between 1 and 50.';
+                  }
+
+                  numDogs = valueAsInt;
+                }
+
                 return null;
               },
             ),
             Padding(
               padding: const EdgeInsetsDirectional.only(top: 10),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // Validate returns true if the form is valid, or false otherwise.
                   if (_formKey.currentState!.validate()) {
+                    var urlList = await fetchURLListFromDogApi(numDogs: numDogs);
+                    Navigator.pushNamed(context, '/MultipleDogsDisplay', arguments: urlList);
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Processing Data')),
@@ -76,4 +88,45 @@ class _DogsFormState extends State<DogsForm> {
     );
   }
 }
+
+class MultipleDogsDisplay extends StatefulWidget {
+  const MultipleDogsDisplay({Key? key}) : super(key: key);
+
+  @override
+  _MultipleDogsDisplayState createState() => _MultipleDogsDisplayState();
+}
+
+class _MultipleDogsDisplayState extends State<MultipleDogsDisplay> {
+  @override
+  Widget build(BuildContext context) {
+
+    final urlList = ModalRoute.of(context)!.settings.arguments as List<String>;
+
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Multiple Random Dogs'),
+        ),
+        body: Center(
+            child: Column(
+              children: [
+                Expanded(
+                  child: GridView.builder(
+                      itemCount: urlList.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10
+                      ),
+                      itemBuilder: (context, index) {
+                        return Image.network(urlList[index]);
+                      }
+                  )
+                )
+              ],
+            )
+        )
+    );
+  }
+}
+
 

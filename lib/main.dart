@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const RandomDog(),
         '/MultipleDogs': (context) => const MultipleDogs(),
+        '/MultipleDogsDisplay': (context) => const MultipleDogsDisplay(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
