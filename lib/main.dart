@@ -50,7 +50,8 @@ class _RandomDogState extends State<RandomDog> {
   /// Return Image widget if available, otherwise error Text
   Widget _displayDog() {
     if (randomDogImage == null) {
-      //return const Text('Please refresh to load a new dog image!', style: TextStyle(fontSize: 22));
+      return const Text('\n\nPress refresh to load a new dog image!', style: TextStyle(fontSize: 22));
+      /*
       return AlertDialog(
         title: const Text('No image available'),
         content: const Text('Press Refresh to load a new dog!'),
@@ -61,6 +62,7 @@ class _RandomDogState extends State<RandomDog> {
           )
         ]
       );
+      */
     }
     else {
       return Image.network(randomDogImage as String);
